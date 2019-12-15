@@ -17,6 +17,8 @@ func main() {
 	fmt.Println(len(names), len(to_center), len(to_satelites))
 	solution1 := count_centers("COM",0,to_satelites)
 	fmt.Println("Solution 1: ", solution1)
+	solution2 := distance_to_santa(to_center)
+	fmt.Println("Solution 2: ", solution2)
 }
 
 func count_centers(obj string, curr int, to_satelites map[string][]string) int {
@@ -28,7 +30,40 @@ func count_centers(obj string, curr int, to_satelites map[string][]string) int {
 	return centers
 }
 
+func distance_to_center(obj string, to_center map[string]string) int {
+	dist := 0
+	for obj != "COM" {
+		dist++
+		obj = to_center[obj]
+	}
+	return dist
+}
 
+func distance_to_santa(to_center map[string]string) int {
+	you := to_center["YOU"] // your planet
+	santa := to_center["SAN"] // santa's planet
+	your_radius := distance_to_center(you, to_center)
+	santas_radius := distance_to_center(santa, to_center)
+	fmt.Println("TO CENTER (you, santa) ", your_radius, santas_radius)
+	distance := 0
+	for your_radius > santas_radius {
+		you = to_center[you]
+		distance ++
+		your_radius--
+	}
+	for santas_radius > your_radius {
+		santa = to_center[santa]
+		distance ++
+		santas_radius--
+	}
+	fmt.Println("TO CENTER (you, santa) ", your_radius, santas_radius)
+	for santa != you {
+		santa = to_center[santa]
+		you = to_center[you]
+		distance += 2
+	}
+	return distance
+}
 
 func to_names(lines []string) []string {
 	names := make([]string, len(lines))
