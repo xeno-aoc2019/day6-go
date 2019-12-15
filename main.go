@@ -15,13 +15,24 @@ func main() {
 	names := to_names(lines)
 	to_satelites := map_to_satelites(names, lines)
 	fmt.Println(len(names), len(to_center), len(to_satelites))
+	solution1 := count_centers("COM",0,to_satelites)
+	fmt.Println("Solution 1: ", solution1)
 }
+
+func count_centers(obj string, curr int, to_satelites map[string][]string) int {
+	satellites := to_satelites[obj]
+	centers := curr
+	for i := 0; i < len(satellites); i++ {
+		centers += count_centers(satellites[i],curr+1,to_satelites)
+	}
+	return centers
+}
+
+
 
 func to_names(lines []string) []string {
 	names := make([]string, len(lines))
 	for i := 0; i < len(lines); i++ {
-//		fmt.Println(i)
-//		fmt.Printf("%v %v\n", lines[i], i)
 		tokens := strings.Split(lines[i], ")")
 		if len(tokens) > 1 {
 			names[i] = tokens[1]
